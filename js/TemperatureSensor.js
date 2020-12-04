@@ -54,7 +54,7 @@ class TemperatureSensor extends FeatureOperations {
 
       const decodedTemperature = {
         value: temperature,
-        unit: "Celsius",
+        unit: "℃",
       };
 
       return decodedTemperature;

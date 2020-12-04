@@ -6,32 +6,116 @@
   <body>
     <h1>Thingy:52 temperature reading example</h1>
     <button id="connectBtn">Connect</button>
+    <button id="stopBtn">Stop</button>
+
+    <div id="DateB"></div>
+    <div id="DateNow"></div>
     <div id="temperature"></div>
+    <div id="humidity"></div>
     <script type="module">
       
       import Thingy from "./index.js";
+      var humi = 0;
+      var humiuni = 0;
+      var date, yyyy, mm, dd, hh, mi, ss = 0; 
+      var began = 0;
+      var i = 0;
+      var array = [];
 
       const thingy = new Thingy({logEnabled: true});
 
       async function start(device) {
         await device.connect();
         await device.temperature.start();
-        await device.pressure.start();
+        await device.humidity.start();
         await device.addEventListener("temperature", logData);
-        //await device.addEventListener("temperature", AtesA);
+        await device.addEventListener("humidity", logData2);
+        alert('測定開始します。');
+
+        const el3 = document.querySelector("#DateB");
+        date = new Date();
+        yyyy = date.getFullYear();
+        mm = toDoubleDigits(date.getMonth() + 1);
+        dd = toDoubleDigits(date.getDate());
+        hh = toDoubleDigits(date.getHours());
+        mi = toDoubleDigits(date.getMinutes());
+        ss = toDoubleDigits(date.getSeconds());
+        began = yyyy + mm + dd + hh + mi;
+        el3.innerHTML = `開始時刻 : ${mm}/${dd}  ${hh}:${mi}:${ss}`;
+      }
+      async function stop(device) {
+        //await device.connect();
+        await device.temperature.stop();
+        await device.humidity.stop();
+        //await device.addEventListener("humidity", logData);
+        alert('測定終了しました。');
       }
 
       function logData(data) {
+        
+        
         const el = document.querySelector("#temperature");
-        el.innerHTML = `Temperature: ${data.detail.value} ${data.detail.unit}`;
-        sleep(1000);
-        const el2 = document.querySelector("#pressure");
-        el.innerHTML = `Temperature: ${data.detail.value} ${data.detail.unit}`;
+        const el2 = document.querySelector("#humidity");
+        const el4 = document.querySelector("#DateNow");
+
+        date = new Date();
+        yyyy = date.getFullYear();
+        mm = toDoubleDigits(date.getMonth() + 1);
+        dd = toDoubleDigits(date.getDate());
+        hh = toDoubleDigits(date.getHours());
+        mi = toDoubleDigits(date.getMinutes());
+        ss = toDoubleDigits(date.getSeconds());
+        el4.innerHTML = `取得時刻 : ${mm}/${dd}  ${hh}:${mi}:${ss}`;
+
+        el.innerHTML = `温度: ${data.detail.value} ${data.detail.unit}`;
+        el2.innerHTML = `湿度: ${humi} ${humiuni}`;
+        //console.log("hello world!");
+        //console.log(data.detail.value + " " + data.detail.unit);
+        //console.log(humi+ " " + humiuni);
+
+        array[i] = [];
+
+        array[i][0] = hh + ":" + mi + ":" + ss;
+        array[i][1] = data.detail.value;
+        array[i][2] = humi;
+
+        
+        //console.log(array[i][1]);
+        console.log(array[i][0] + "  " + array[i][1] + "  " + array[i][2]);
+        i++;
       }
-      
+
+      // 湿度取得
+      function logData2(data2) {
+        const el2 = document.querySelector("#humidity");
+        //el2.innerHTML = `humidity: ${data2.detail.value} ${data2.detail.unit}`;
+        //console.log("hello world!22");
+        //console.log(data2.detail.value);
+        humi = data2.detail.value;
+        humiuni =data2.detail.unit;
+      }
+
+      //時刻用関数
+      var toDoubleDigits = function(num) {
+        num += "";
+        if (num.length === 1) {
+        num = "0" + num;
+        }
+        return num;     
+      };
+
+
+      // ボタン操作
       document.querySelector("#connectBtn").addEventListener("click", async () => {
           start(thingy);
       });
+
+      document.querySelector("#stopBtn").addEventListener("click", async () => {
+          stop(thingy);
+      });
+
+
+
     </script>
   </body>
 </html>
