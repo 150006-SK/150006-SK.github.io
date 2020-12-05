@@ -9,12 +9,14 @@
     <button id="connectBtn">Connect</button>
     <button id="stopBtn">Stop</button>
     <button id="saveBtn">Save</button>
+    <button id="resetBtn">Reset</button>
     <a style="display:none;" id="downloader" href="#"></a>
 
     <div id="DateB"></div>
     <div id="DateNow"></div>
     <div id="temperature"></div>
     <div id="humidity"></div>
+    <div id="counter"></div>
     <script type="module">
       
       import Thingy from "./index.js";
@@ -65,6 +67,7 @@
         const el = document.querySelector("#temperature");
         const el2 = document.querySelector("#humidity");
         const el4 = document.querySelector("#DateNow");
+        const el5 = document.querySelector("#counter");
 
         date = new Date();
         yyyy = date.getFullYear();
@@ -77,6 +80,8 @@
 
         el.innerHTML = `温度: ${data.detail.value} ${data.detail.unit}`;
         el2.innerHTML = `湿度: ${humi} ${humiuni}`;
+        el5.innerHTML = `取得回数: ${i}`;
+
 
         //console.log("hello world!");
         //console.log(data.detail.value + " " + data.detail.unit);
@@ -153,6 +158,9 @@
     
         });
 
+        document.querySelector("#resetBtn").addEventListener("click", async () => {
+          location.reload();
+      });
 
     </script>
   </body>
