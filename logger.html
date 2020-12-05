@@ -56,10 +56,8 @@
       }
 
       async function stop(device) {
-        //await device.connect();
         await device.temperature.stop();
         await device.humidity.stop();
-        //await device.addEventListener("humidity", logData);
         alert('測定終了しました。');
       }
 
@@ -82,8 +80,6 @@
         el2.innerHTML = `湿度: ${humi} ${humiuni}`;
         el5.innerHTML = `取得回数: ${i}`;
 
-
-        //console.log("hello world!");
         //console.log(data.detail.value + " " + data.detail.unit);
         //console.log(humi+ " " + humiuni);
 
@@ -92,7 +88,7 @@
         array[i][0] = hh + ":" + mi + ":" + ss;
         array[i][1] = data.detail.value;
         array[i][2] = humi; 
-        //console.log(array[i][1]);
+
         console.log(array[i][0] + "  " + array[i][1] + "  " + array[i][2]);
         i++;
       }
@@ -101,17 +97,9 @@
       function logData2(data2) {
         const el2 = document.querySelector("#humidity");
         //el2.innerHTML = `humidity: ${data2.detail.value} ${data2.detail.unit}`;
-        //console.log("hello world!22");
         //console.log(data2.detail.value);
         humi = data2.detail.value;
         humiuni =data2.detail.unit;
-      }
-
-      //CSV保存
-      function save() {
-        console.log("hello world!22");
-        
-
       }
 
        //時刻用関数
@@ -134,9 +122,6 @@
 
       document.querySelector("#saveBtn").addEventListener("click", async () => {
 
-        // 配列 の用意
-        //var array_data = [['りんご',1,200],['メロン',2,4000],['バナナ',4,500]];
-
         // BOM の用意（文字化け対策）
         var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
 
@@ -148,8 +133,7 @@
         var url = (window.URL || window.webkitURL).createObjectURL(blob);
 
         var a = document.getElementById('downloader');
-        //a.download = 'data.csv';
-        //var name = began + "_temperature humidity.csv";
+
         a.download = began + "_temperature humidity.csv";
         a.href = url;
 
