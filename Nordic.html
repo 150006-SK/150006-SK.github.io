@@ -11,12 +11,14 @@
     <button id="saveBtn">Save</button><p></p>
     <button id="resetBtn">Reset</button>
     <a style="display:none;" id="downloader" href="#"></a>
+    <p></p>
+    <div id="DateB">開始時刻 : </div>
+    <div id="DateNow">取得時刻 : </div>
+    <div id="temperature">温度 : </div>
+    <div id="humidity">湿度 : </div>
+    <div id="counter">取得回数 :</div>
+    <div id="battery">Battery残量 : </div>
 
-    <div id="DateB"></div>
-    <div id="DateNow"></div>
-    <div id="temperature"></div>
-    <div id="humidity"></div>
-    <div id="counter"></div>
     <script type="module">
       
       import Thingy from "./index.js";
@@ -26,21 +28,24 @@
       var began = 0;
       var i = 1;
       var array = [];
+      var batt = 0;
 
       array[0] = [];
 
       array[0][0] = "時刻";
       array[0][1] = "温度[℃]";
-      array[0][2] = "湿度[%]"; 
- 
+      array[0][2] = "湿度[%]";
+
       const thingy = new Thingy({logEnabled: true});
 
       async function start(device) {
         await device.connect();
         await device.temperature.start();
         await device.humidity.start();
+        await device.battery.start();
         await device.addEventListener("temperature", logData);
         await device.addEventListener("humidity", logData2);
+        await device.addEventListener("battery", logData3);
         //alert('測定開始します。');
 
          const el3 = document.querySelector("#DateB");
@@ -76,9 +81,9 @@
         ss = toDoubleDigits(date.getSeconds());
         el4.innerHTML = `取得時刻 : ${mm}/${dd}  ${hh}:${mi}:${ss}`;
 
-        el.innerHTML = `温度: ${data.detail.value} ${data.detail.unit}`;
-        el2.innerHTML = `湿度: ${humi} ${humiuni}`;
-        el5.innerHTML = `取得回数: ${i}`;
+        el.innerHTML = `温度 : ${data.detail.value} ${data.detail.unit}`;
+        el2.innerHTML = `湿度 : ${humi} ${humiuni}`;
+        el5.innerHTML = `取得回数 : ${i}`;
 
         //console.log(data.detail.value + " " + data.detail.unit);
         //console.log(humi+ " " + humiuni);
@@ -100,6 +105,13 @@
         //console.log(data2.detail.value);
         humi = data2.detail.value;
         humiuni =data2.detail.unit;
+      }
+
+      //Battery取得
+      function logData3(data3) {
+        const el7 = document.querySelector("#battery");
+        el7.innerHTML = `Battery残量 : ${data3.detail.status} %`;
+        console.log("Battery: " + data3.detail.status + "%");
       }
 
        //時刻用関数
